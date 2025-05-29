@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crafter - Cromos de Fútbol Legendarios</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            opacity: 0.1;
+            animation: gradientShift 10s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%); }
+            50% { background: linear-gradient(45deg, #a8edea 0%, #fed6e3 50%, #fed6e3 100%); }
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #fff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .cart-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .cart-count {
+            background: #fff;
+            color: #ff6b6b;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-weight: bold;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #fff, #ffd700, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
+            to { text-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .filters {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            color: white;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .filter-select, .filter-input {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 0.8rem;
+            color: white;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .filter-select option {
+            background: #333;
+            color: white;
+        }
+
+        .clear-filters {
+            background: linear-gradient(45deg, #ff4757, #ff6b7a);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            align-self: flex-start;
+        }
+
+        .clear-filters:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+            transform: rotate(45deg) translate(50%, 50%);
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 215, 0, 0.5);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rarity-legendary { background: linear-gradient(135deg, #ffd700, #ffed4e); }
+        .rarity-epic { background: linear-gradient(135deg, #9c27b0, #e91e63); }
+        .rarity-rare { background: linear-gradient(135deg, #2196f3, #03dac6); }
+        .rarity-common { background: linear-gradient(135deg, #4caf50, #8bc34a); }
+
+        .card-content {
+            color: white;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .card-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            background: linear-gradient(45deg, #00b894, #00cec9);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-to-cart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 184, 148, 0.4);
+        }
+
+        .add-to-cart:active {
+            transform: scale(0.98);
+        }
+
+        .cart-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .cart-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .cart-title {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-cart:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(90deg);
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .cart-total {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 15px;
+            margin: 2rem 0;
+            color: white;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #333;
+            border: none;
+            padding: 1.5rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-card {
+            position: absolute;
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border-radius: 5px;
+            opacity: 0.3;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .filter-grid { grid-template-columns: 1fr; }
+            .products-grid { grid-template-columns: 1fr; }
+            .container { padding: 0 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    
+    <div class="floating-elements">
+        <div class="floating-card" style="top: 10%; left: 5%; animation-delay: 0s;"></div>
+        <div class="floating-card" style="top: 20%; right: 10%; animation-delay: 1s;"></div>
+        <div class="floating-card" style="top: 60%; left: 8%; animation-delay: 2s;"></div>
+        <div class="floating-card" style="top: 80%; right: 15%; animation-delay: 3s;"></div>
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">⚽ CRAFTER</div>
+                <button class="cart-btn" onclick="toggleCart()">
+                    🛒 Carrito
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Cromos de Fútbol Legendarios</h1>
+            <p>Descubre la colección más épica de cromos de fútbol. ¡Cartas legendarias te esperan! ⚽✨</p>
+        </section>
+
+        <section class="filters">
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label for="teamFilter">🏆 Equipo</label>
+                    <select id="teamFilter" class="filter-select">
+                        <option value="">Todos los equipos</option>
+                        <option value="Real Madrid">Real Madrid</option>
+                        <option value="Barcelona">FC Barcelona</option>
+                        <option value="Manchester United">Manchester United</option>
+                        <option value="Bayern Munich">Bayern Munich</option>
+                        <option value="Liverpool">Liverpool</option>
+                        <option value="PSG">Paris Saint-Germain</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="rarityFilter">💎 Rareza</label>
+                    <select id="rarityFilter" class="filter-select">
+                        <option value="">Todas las rarezas</option>
+                        <option value="legendary">Legendaria</option>
+                        <option value="epic">Épica</option>
+                        <option value="rare">Rara</option>
+                        <option value="common">Común</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="playerFilter">⚽ Jugador</label>
+                    <input type="text" id="playerFilter" class="filter-input" placeholder="Buscar jugador...">
+                </div>
+                <div class="filter-group">
+                    <label for="priceFilter">💰 Precio máximo</label>
+                    <input type="number" id="priceFilter" class="filter-input" placeholder="€ Precio máximo">
+                </div>
+            </div>
+            <button class="clear-filters" onclick="clearFilters()">🔄 Limpiar Filtros</button>
+        </section>
+
+        <section id="productsGrid" class="products-grid">
+            <!-- Los productos se generarán dinámicamente -->
+        </section>
+    </main>
+
+    <div id="cartModal" class="cart-modal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h2 class="cart-title">🛒 Tu Carrito</h2>
+                <button class="close-cart" onclick="toggleCart()">×</button>
+            </div>
+            <div id="cartItems"></div>
+            <div class="cart-total">
+                <h3>Total: €<span id="cartTotal">0.00</span></h3>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">💳 Finalizar Compra</button>
+        </div>
+    </div>
+
+    <script>
+        // Base de datos de cromos
+        const cromos = [
+            {
+                id: 1,
+                player: "Lionel Messi",
+                team: "PSG",
+                position: "Delantero",
+                rating: 99,
+                rarity: "legendary",
+                price: 50.00,
+                emoji: "🐐"
+            },
+            {
+                id: 2,
+                player: "Cristiano Ronaldo",
+                team: "Manchester United",
+                position: "Delantero",
+                rating: 98,
+                rarity: "legendary",
+                price: 48.00,
+                emoji: "👑"
+            },
+            {
+                id: 3,
+                player: "Kylian Mbappé",
+                team: "PSG",
+                position: "Delantero",
+                rating: 95,
+                rarity: "epic",
+                price: 35.00,
+                emoji: "⚡"
+            },
+            {
+                id: 4,
+                player: "Erling Haaland",
+                team: "Manchester City",
+                position: "Delantero",
+                rating: 94,
+                rarity: "epic",
+                price: 32.00,
+                emoji: "🤖"
+            },
+            {
+                id: 5,
+                player: "Kevin De Bruyne",
+                team: "Manchester City",
+                position: "Centrocampista",
+                rating: 93,
+                rarity: "epic",
+                price: 28.00,
+                emoji: "🎯"
+            },
+            {
+                id: 6,
+                player: "Virgil van Dijk",
+                team: "Liverpool",
+                position: "Defensa",
+                rating: 92,
+                rarity: "rare",
+                price: 25.00,
+                emoji: "🛡️"
+            },
+            {
+                id: 7,
+                player: "Luka Modrić",
+                team: "Real Madrid",
+                position: "Centrocampista",
+                rating: 91,
+                rarity: "rare",
+                price: 22.00,
+                emoji: "🎩"
+            },
+            {
+                id: 8,
+                player: "Robert Lewandowski",
+                team: "Barcelona",
+                position: "Delantero",
+                rating: 91,
+                rarity: "rare",
+                price: 24.00,
+                emoji: "🦅"
+            },
+            {
+                id: 9,
+                player: "Pedri",
+                team: "Barcelona",
+                position: "Centrocampista",
+                rating: 87,
+                rarity: "common",
+                price: 15.00,
+                emoji: "🌟"
+            },
+            {
+                id: 10,
+                player: "Jude Bellingham",
+                team: "Real Madrid",
+                position: "Centrocampista",
+                rating: 88,
+                rarity: "common",
+                price: 18.00,
+                emoji: "💫"
+            }
+        ];
+
+        let cart = [];
+        let filteredCromos = [...cromos];
+
+        // Renderizar productos
+        function renderProducts(products) {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = products.map(cromo => `
+                <div class="card">
+                    <div class="card-image rarity-${cromo.rarity}">
+                        <span style="font-size: 4rem;">${cromo.emoji}</span>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${cromo.player}</h3>
+                        <div class="card-details">
+                            <span>🏆 ${cromo.team}</span>
+                            <span>⚽ ${cromo.position}</span>
+                            <span>⭐ Rating: ${cromo.rating}</span>
+                            <span>💎 ${cromo.rarity.charAt(0).toUpperCase() + cromo.rarity.slice(1)}</span>
+                        </div>
+                        <div class="card-price">€${cromo.price.toFixed(2)}</div>
+                        <button class="add-to-cart" onclick="addToCart(${cromo.id})">
+                            🛒 Añadir al Carrito
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filtros
+        function applyFilters() {
+            const teamFilter = document.getElementById('teamFilter').value;
+            const rarityFilter = document.getElementById('rarityFilter').value;
+            const playerFilter = document.getElementById('playerFilter').value.toLowerCase();
+            const priceFilter = parseFloat(document.getElementById('priceFilter').value) || Infinity;
+
+            filteredCromos = cromos.filter(cromo => {
+                return (!teamFilter || cromo.team === teamFilter) &&
+                       (!rarityFilter || cromo.rarity === rarityFilter) &&
+                       (!playerFilter || cromo.player.toLowerCase().includes(playerFilter)) &&
+                       (cromo.price <= priceFilter);
+            });
+
+            renderProducts(filteredCromos);
+        }
+
+        function clearFilters() {
+            document.getElementById('teamFilter').value = '';
+            document.getElementById('rarityFilter').value = '';
+            document.getElementById('playerFilter').value = '';
+            document.getElementById('priceFilter').value = '';
+            filteredCromos = [...cromos];
+            renderProducts(filteredCromos);
+        }
+
+        // Carrito
+        function addToCart(id) {
+            const cromo = cromos.find(c => c.id === id);
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...cromo, quantity: 1 });
+            }
+            
+            updateCartUI();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartUI();
+        }
+
+        function updateQuantity(id, change) {
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(id);
+                } else {
+                    updateCartUI();
+                }
+            }
+        }
+
+        function updateCartUI() {
+            const cartCount = document.getElementById('cartCount');
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            cartCount.textContent = totalItems;
+            cartTotal.textContent = totalPrice.toFixed(2);
+            
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div>
+                        <strong>${item.player}</strong><br>
+                        <small>${item.team} - €${item.price.toFixed(2)}</small>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button onclick="updateQuantity(${item.id}, -1)" style="background: #ff4757; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;">-</button>
+                        <span style="font-weight: bold;">${item.quantity}</span>
+                        <button onclick="updateQuantity(${item.id}, 1)" style="background: #00b894; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer;">+</button>
+                        <button onclick="removeFromCart(${item.id})" style="background: #e74c3c; color: white; border: none; padding: 0.5rem; border-radius: 5px; cursor: pointer;">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleCart() {
+            const modal = document.getElementById('cartModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Tu carrito está vacío');
+                return;
+            }
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            alert(`¡Gracias por tu compra! Total: €${total.toFixed(2)} 🎉\n\n¡Tus cromos legendarios están en camino! ⚽✨`);
+            cart = [];
+            updateCartUI();
+            toggleCart();
+        }
+
+        // Event listeners
+        document.getElementById('teamFilter').addEventListener('change', applyFilters);
+        document.getElementById('rarityFilter').addEventListener('change', applyFilters);
+        document.getElementById('playerFilter').addEventListener('input', applyFilters);
+        document.getElementById('priceFilter').addEventListener('input', applyFilters);
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('cartModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                toggleCart();
+            }
+        });
+
+        // Inicializar
+        renderProducts(cromos);
+    </script>
+</body>
+</html>
